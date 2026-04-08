@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automation Potential Checker — mainly.design</title>
+  <style>
+    :root {
+      --bg: #0d0d0f;
+      --surface: #16161a;
+      --surface2: #1e1e24;
+      --border: #2a2a35;
+      --accent: #7c6af7;
+      --accent-light: #9d8fff;
+      --accent-glow: rgba(124, 106, 247, 0.18);
+      --text: #e8e8f0;
+      --text-muted: #7a7a96;
+      --text-dim: #4a4a62;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --orange: #f97316;
+      --red: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text);
+    }
+    .logo span { color: var(--accent-light); }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--accent-glow);
+      color: var(--accent-light);
+      border: 1px solid rgba(124,106,247,0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 72px 40px 48px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent-light), #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout ── */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+      header { padding: 16px 20px; }
+      .hero { padding: 48px 20px 32px; }
+    }
+
+    /* ── Service Picker ── */
+    .picker-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .picker-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .picker-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .selected-count {
+      font-size: 13px;
+      color: var(--accent-light);
+      font-weight: 500;
+    }
+
+    .category {
+      margin-bottom: 24px;
+    }
+
+    .category-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+      gap: 8px;
+    }
+
+    .service-card {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+      position: relative;
+    }
+
+    .service-card:hover {
+      border-color: var(--accent);
+      background: rgba(124,106,247,0.07);
+    }
+
+    .service-card.selected {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .service-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      font-size: 9px;
+      color: var(--accent-light);
+      font-weight: 700;
+    }
+
+    .service-icon {
+      font-size: 22px;
+      margin-bottom: 5px;
+      line-height: 1;
+    }
+
+    .service-name {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .service-card.selected .service-name {
+      color: var(--text);
+    }
+
+    /* ── Results Panel ── */
+    .results-panel {
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .results-panel { position: static; }
+    }
+
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: all 0.2s ease;
+    }
+
+    .result-card-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+
+    /* Automations list */
+    .automations-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 60px;
+    }
+
+    .automation-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      animation: fadeSlideIn 0.25s ease;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .automation-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .automation-text {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .automation-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .automation-tag {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(124,106,247,0.12);
+      color: var(--accent-light);
+      font-weight: 500;
+    }
+
+    .empty-state {
+      color: var(--text-dim);
+      font-size: 13px;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    /* Time savings */
+    .time-display {
+      text-align: center;
+      padding: 8px 0;
+    }
+
+    .time-number {
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--accent-light), #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      transition: all 0.3s ease;
+    }
+
+    .time-unit {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .time-sub {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 8px;
+    }
+
+    /* Complexity badge */
+    .complexity-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .complexity-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .complexity-badge.easy {
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--green);
+    }
+
+    .complexity-badge.moderate {
+      background: rgba(234,179,8,0.12);
+      border: 1px solid rgba(234,179,8,0.3);
+      color: var(--yellow);
+    }
+
+    .complexity-badge.complex {
+      background: rgba(249,115,22,0.12);
+      border: 1px solid rgba(249,115,22,0.3);
+      color: var(--orange);
+    }
+
+    .complexity-badge.none {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .complexity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .complexity-detail {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* CTA */
+    .cta-card {
+      background: linear-gradient(135deg, rgba(124,106,247,0.15), rgba(124,106,247,0.05));
+      border: 1px solid rgba(124,106,247,0.35);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+    }
+
+    .cta-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .cta-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: all 0.15s ease;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+    }
+
+    .cta-btn:hover {
+      background: var(--accent-light);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(124,106,247,0.4);
+    }
+
+    .cta-note {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 10px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 40px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    footer a { color: var(--accent-light); text-decoration: none; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">mainly<span>.</span>design</div>
+  <div class="badge">Automation Checker</div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Für deutsche KMU</div>
+  <h1>Welche Prozesse können bei euch <em>automatisiert</em> werden?</h1>
+  <p class="hero-sub">Wählt eure Tools aus — wir zeigen euch sofort, welche Abläufe automatisiert werden können, wie viel Zeit ihr spart und wie aufwändig die Umsetzung wäre.</p>
+</div>
+
+<div class="main">
+
+  <!-- LEFT: Service Picker -->
+  <div class="picker-panel">
+    <div class="picker-header">
+      <div class="picker-title">Eure Tools</div>
+      <div class="selected-count" id="selectedCount">0 ausgewählt</div>
+    </div>
+
+    <div id="servicePicker"></div>
+  </div>
+
+  <!-- RIGHT: Results -->
+  <div class="results-panel">
+
+    <div class="result-card">
+      <div class="result-card-title">Automatisierbare Prozesse</div>
+      <div class="automations-list" id="automationsList">
+        <div class="empty-state">Wählt mindestens 2 Tools aus, um Automatisierungs&shy;potenziale zu sehen.</div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-title">Monatliche Zeitersparnis</div>
+      <div class="time-display">
+        <div class="time-number" id="timeNumber">—</div>
+        <div class="time-unit" id="timeUnit">Stunden/Monat</div>
+        <div class="time-sub" id="timeSub">Wählt Tools aus, um eine Schätzung zu erhalten.</div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-card-title">Umsetzungsaufwand</div>
+      <div class="complexity-wrap">
+        <div class="complexity-badge none" id="complexityBadge">
+          <span class="complexity-dot"></span>
+          <span id="complexityLabel">Noch keine Auswahl</span>
+        </div>
+        <div class="complexity-detail" id="complexityDetail">Wählt eure Tools aus, um den Umsetzungsaufwand einzuschätzen.</div>
+      </div>
+    </div>
+
+    <div class="cta-card">
+      <div class="cta-title">Bereit loszulegen?</div>
+      <div class="cta-sub">mainly.design setzt das für euch um — kostenlos und unverbindlich einschätzen lassen.</div>
+      <a class="cta-btn" id="ctaBtn" href="mailto:hello@mainly.design?subject=Automation%20Audit">Kostenlos einschätzen lassen →</a>
+      <div class="cta-note">Kein Angebot, kein Verkaufsgespräch. Nur ehrliche Einschätzung.</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>Ein Tool von <a href="https://mainly.design" target="_blank">mainly.design</a> · Automatisierung für deutsche KMU</p>
+</footer>
+
+<script>
+// ── Service definitions ──────────────────────────────────────────
+const CATEGORIES = [
+  {
+    label: 'Kommunikation',
+    services: [
+      { id: 'outlook',   name: 'Outlook',          icon: '📧' },
+      { id: 'gmail',     name: 'Gmail',             icon: '✉️' },
+      { id: 'slack',     name: 'Slack',             icon: '💬' },
+      { id: 'teams',     name: 'Teams',             icon: '🟣' },
+      { id: 'whatsapp',  name: 'WhatsApp Business', icon: '📱' },
+    ]
+  },
+  {
+    label: 'CRM / Sales',
+    services: [
+      { id: 'hubspot',    name: 'HubSpot',    icon: '🟠' },
+      { id: 'salesforce', name: 'Salesforce', icon: '☁️' },
+      { id: 'pipedrive',  name: 'Pipedrive',  icon: '🔵' },
+    ]
+  },
+  {
+    label: 'Buchhaltung / ERP',
+    services: [
+      { id: 'sevdesk',   name: 'sevDesk',   icon: '🧾' },
+      { id: 'lexoffice', name: 'Lexoffice', icon: '📒' },
+      { id: 'datev',     name: 'DATEV',     icon: '🏦' },
+      { id: 'sap',       name: 'SAP',       icon: '🔷' },
+    ]
+  },
+  {
+    label: 'HR',
+    services: [
+      { id: 'personio',  name: 'Personio',  icon: '👥' },
+      { id: 'factorial', name: 'Factorial', icon: '📊' },
+    ]
+  },
+  {
+    label: 'E-Commerce',
+    services: [
+      { id: 'shopify',     name: 'Shopify',     icon: '🛍️' },
+      { id: 'woocommerce', name: 'WooCommerce', icon: '🛒' },
+    ]
+  },
+  {
+    label: 'Cloud / Storage',
+    services: [
+      { id: 'gdrive',     name: 'Google Drive', icon: '💚' },
+      { id: 'dropbox',    name: 'Dropbox',      icon: '🔵' },
+      { id: 'onedrive',   name: 'OneDrive',     icon: '🔷' },
+      { id: 'sharepoint', name: 'SharePoint',   icon: '🟦' },
+    ]
+  },
+  {
+    label: 'Marketing',
+    services: [
+      { id: 'mailchimp',      name: 'Mailchimp',        icon: '🐒' },
+      { id: 'activecampaign', name: 'ActiveCampaign',   icon: '⚡' },
+      { id: 'brevo',          name: 'Brevo',             icon: '🟢' },
+    ]
+  },
+  {
+    label: 'Projektmanagement',
+    services: [
+      { id: 'asana',   name: 'Asana',   icon: '🔴' },
+      { id: 'monday',  name: 'Monday',  icon: '🟡' },
+      { id: 'notion',  name: 'Notion',  icon: '⬛' },
+      { id: 'trello',  name: 'Trello',  icon: '🔵' },
+    ]
+  },
+  {
+    label: 'Sonstiges',
+    services: [
+      { id: 'calendly',  name: 'Calendly',     icon: '📅' },
+      { id: 'typeform',  name: 'Typeform',      icon: '📝' },
+      { id: 'stripe',    name: 'Stripe',        icon: '💳' },
+      { id: 'zapier',    name: 'Zapier/Make',   icon: '⚙️' },
+      { id: 'ausbildung', name: 'ausbildung.de', icon: '🎓' },
+    ]
+  },
+];
+
+// ── Automation lookup table ──────────────────────────────────────
+// Each entry: { tools: [id, id, ...], text, hours: [min, max] }
+// If ANY two of the tools in the array are selected, the automation fires.
+// For entries with exactly 2 tools, both must be selected.
+const AUTOMATIONS = [
+  // Outlook/Gmail + Buchhaltung
+  { tools: ['outlook','sevdesk'],   text: 'Eingangsrechnungen per E-Mail automatisch in sevDesk erfassen und kategorisieren', hours: [4,6] },
+  { tools: ['gmail','sevdesk'],     text: 'Gmail-Anhänge mit Rechnungen automatisch in sevDesk importieren', hours: [3,5] },
+  { tools: ['outlook','lexoffice'], text: 'Eingangsrechnungen aus Outlook automatisch in Lexoffice anlegen', hours: [4,6] },
+  { tools: ['gmail','lexoffice'],   text: 'Rechnungs-E-Mails aus Gmail automatisch in Lexoffice verbuchen', hours: [3,5] },
+  { tools: ['outlook','datev'],     text: 'Belege aus Outlook-E-Mails automatisch für DATEV aufbereiten und exportieren', hours: [5,7] },
+  { tools: ['gmail','datev'],       text: 'Gmail-Anhänge automatisch als DATEV-Belegstapel vorbereiten', hours: [4,6] },
+
+  // CRM + E-Mail
+  { tools: ['hubspot','outlook'],   text: 'Neue HubSpot-Leads automatisch per personalisierter Outlook-E-Mail begrüßen', hours: [3,5] },
+  { tools: ['hubspot','gmail'],     text: 'HubSpot-Deals bei Statuswechsel automatisch per Gmail benachrichtigen', hours: [3,5] },
+  { tools: ['salesforce','outlook'],text: 'Salesforce-Opportunities automatisch mit Outlook-Kalender synchronisieren', hours: [4,6] },
+  { tools: ['salesforce','gmail'],  text: 'Neue Salesforce-Kontakte automatisch mit Gmail-Verlauf anreichern', hours: [4,6] },
+  { tools: ['pipedrive','outlook'], text: 'Pipedrive-Deals bei Abschluss automatisch per E-Mail-Vorlage bestätigen', hours: [3,5] },
+  { tools: ['pipedrive','gmail'],   text: 'Gmail-Konversationen automatisch als Pipedrive-Aktivitäten protokollieren', hours: [3,4] },
+
+  // CRM + Buchhaltung
+  { tools: ['hubspot','sevdesk'],   text: 'Gewonnene HubSpot-Deals automatisch als sevDesk-Angebote oder Rechnungen anlegen', hours: [5,7] },
+  { tools: ['hubspot','lexoffice'], text: 'HubSpot-Kunden bei Deal-Abschluss automatisch in Lexoffice übertragen', hours: [4,6] },
+  { tools: ['pipedrive','sevdesk'], text: 'Pipedrive-Deals automatisch in sevDesk-Aufträge umwandeln', hours: [4,6] },
+  { tools: ['salesforce','sap'],    text: 'Salesforce-Aufträge automatisch in SAP-Bestellungen überführen', hours: [6,8] },
+
+  // Calendly
+  { tools: ['calendly','outlook'],  text: 'Calendly-Termine automatisch in Outlook-Kalender eintragen und Erinnerungen versenden', hours: [2,4] },
+  { tools: ['calendly','gmail'],    text: 'Calendly-Buchungen automatisch per Gmail bestätigen und Erinnerungen schedulen', hours: [2,3] },
+  { tools: ['calendly','hubspot'],  text: 'Calendly-Buchungen automatisch als HubSpot-Meeting und Lead anlegen', hours: [3,5] },
+  { tools: ['calendly','pipedrive'],text: 'Calendly-Termine automatisch als Pipedrive-Aktivität eintragen', hours: [3,4] },
+  { tools: ['calendly','teams'],    text: 'Calendly-Buchungen automatisch als Teams-Meeting mit Link anlegen', hours: [2,3] },
+  { tools: ['calendly','slack'],    text: 'Team per Slack automatisch über neue Calendly-Buchungen informieren', hours: [2,3] },
+
+  // E-Commerce + Buchhaltung
+  { tools: ['shopify','sevdesk'],   text: 'Shopify-Bestellungen automatisch als Rechnung in sevDesk anlegen und versenden', hours: [5,7] },
+  { tools: ['shopify','lexoffice'], text: 'Shopify-Bestellungen automatisch in Lexoffice als Ausgangsrechnung erfassen', hours: [4,6] },
+  { tools: ['woocommerce','sevdesk'],text: 'WooCommerce-Bestellungen automatisch als sevDesk-Rechnungen erzeugen', hours: [4,6] },
+  { tools: ['woocommerce','lexoffice'],text: 'WooCommerce-Umsätze automatisch in Lexoffice synchronisieren', hours: [4,5] },
+  { tools: ['shopify','datev'],     text: 'Shopify-Umsätze täglich automatisch als DATEV-Export aufbereiten', hours: [5,6] },
+  { tools: ['shopify','stripe'],    text: 'Stripe-Zahlungen automatisch mit Shopify-Bestellungen abgleichen', hours: [3,5] },
+
+  // E-Commerce + CRM
+  { tools: ['shopify','hubspot'],   text: 'Shopify-Kunden bei Erstkauf automatisch als HubSpot-Kontakt anlegen', hours: [3,5] },
+  { tools: ['woocommerce','hubspot'],text: 'WooCommerce-Käufer automatisch in HubSpot-Segmente einordnen', hours: [3,4] },
+  { tools: ['shopify','mailchimp'], text: 'Shopify-Kundensegmente automatisch in Mailchimp-Listen übertragen', hours: [3,4] },
+  { tools: ['shopify','brevo'],     text: 'Shopify-Bestellstatus automatisch als Brevo-Transaktions-E-Mail versenden', hours: [3,5] },
+
+  // HR + Kommunikation
+  { tools: ['personio','outlook'],  text: 'Onboarding-E-Mails und Einarbeitungspläne bei Neueinstellungen automatisch versenden', hours: [4,6] },
+  { tools: ['personio','slack'],    text: 'Team per Slack automatisch über neue Mitarbeiter und Abwesenheiten informieren', hours: [3,4] },
+  { tools: ['personio','teams'],    text: 'Personio-Abwesenheiten automatisch im Teams-Kalender blockieren', hours: [3,4] },
+  { tools: ['factorial','outlook'], text: 'Urlaubsanträge aus Factorial automatisch per Outlook-E-Mail genehmigen lassen', hours: [3,5] },
+  { tools: ['factorial','slack'],   text: 'Schichtpläne aus Factorial automatisch täglich per Slack kommunizieren', hours: [2,4] },
+
+  // Projektmanagement + Kommunikation
+  { tools: ['asana','slack'],       text: 'Asana-Aufgaben bei Fälligkeit automatisch als Slack-Reminder versenden', hours: [2,3] },
+  { tools: ['monday','slack'],      text: 'Monday-Status-Updates automatisch in relevante Slack-Kanäle posten', hours: [2,3] },
+  { tools: ['trello','slack'],      text: 'Trello-Karten-Bewegungen automatisch in Slack-Channels melden', hours: [2,3] },
+  { tools: ['notion','slack'],      text: 'Neue Notion-Einträge automatisch per Slack im Team ankündigen', hours: [2,3] },
+  { tools: ['asana','teams'],       text: 'Asana-Projektfortschritt wöchentlich automatisch als Teams-Bericht teilen', hours: [2,4] },
+
+  // Projektmanagement + CRM
+  { tools: ['asana','hubspot'],     text: 'Neue HubSpot-Deals automatisch als Asana-Projekt anlegen', hours: [3,5] },
+  { tools: ['monday','hubspot'],    text: 'HubSpot-Deals bei Statuswechsel automatisch in Monday-Board übernehmen', hours: [3,5] },
+
+  // Cloud Storage + Kommunikation
+  { tools: ['gdrive','slack'],      text: 'Neue Google-Drive-Dokumente automatisch per Slack im Team ankündigen', hours: [2,3] },
+  { tools: ['sharepoint','teams'],  text: 'SharePoint-Dokumentänderungen automatisch als Teams-Benachrichtigung senden', hours: [2,3] },
+  { tools: ['onedrive','teams'],    text: 'OneDrive-Freigaben automatisch als Teams-Nachricht kommunizieren', hours: [2,3] },
+  { tools: ['dropbox','slack'],     text: 'Neue Dropbox-Uploads automatisch per Slack melden', hours: [2,3] },
+
+  // Marketing + CRM
+  { tools: ['mailchimp','hubspot'], text: 'Mailchimp-Öffnungs- und Klickdaten automatisch in HubSpot-Kontakte zurückschreiben', hours: [3,5] },
+  { tools: ['activecampaign','hubspot'], text: 'ActiveCampaign-Leads automatisch als HubSpot-Kontakte mit Score übertragen', hours: [4,6] },
+  { tools: ['brevo','hubspot'],     text: 'Brevo-Newsletter-Abonnenten automatisch in HubSpot synchronisieren', hours: [3,4] },
+  { tools: ['mailchimp','pipedrive'],text: 'Mailchimp-Klicks auf Angebots-Links automatisch als Pipedrive-Aktivität erfassen', hours: [3,4] },
+
+  // Typeform + CRM/HR
+  { tools: ['typeform','hubspot'],  text: 'Typeform-Kontaktformulare automatisch als HubSpot-Leads anlegen', hours: [2,4] },
+  { tools: ['typeform','outlook'],  text: 'Typeform-Einreichungen automatisch per E-Mail weiterleiten und zuweisen', hours: [2,3] },
+  { tools: ['typeform','personio'], text: 'Bewerber-Typeforms automatisch als Personio-Kandidaten anlegen', hours: [3,5] },
+  { tools: ['typeform','slack'],    text: 'Neue Typeform-Einreichungen sofort per Slack an das zuständige Team melden', hours: [2,3] },
+  { tools: ['typeform','trello'],   text: 'Typeform-Anfragen automatisch als Trello-Karten im Backlog anlegen', hours: [2,3] },
+
+  // Stripe + Buchhaltung
+  { tools: ['stripe','sevdesk'],    text: 'Stripe-Zahlungseingänge automatisch in sevDesk als Zahlung verbuchen', hours: [4,5] },
+  { tools: ['stripe','lexoffice'],  text: 'Stripe-Transaktionen täglich automatisch in Lexoffice importieren', hours: [3,5] },
+  { tools: ['stripe','datev'],      text: 'Stripe-Umsätze automatisch DATEV-konform aufbereiten und exportieren', hours: [4,6] },
+
+  // Zapier/Make as orchestrator
+  { tools: ['zapier','hubspot'],    text: 'Zapier/Make als Middleware nutzen: HubSpot-Daten automatisch in andere Tools routen', hours: [3,5] },
+  { tools: ['zapier','sevdesk'],    text: 'Make-Szenarien für sevDesk: Eingangs- und Ausgangsrechnungen vollautomatisch verarbeiten', hours: [4,6] },
+
+  // Ausbildung.de
+  { tools: ['ausbildung','personio'],text: 'ausbildung.de-Bewerbungen automatisch in Personio-Kandidatenpipeline importieren', hours: [3,5] },
+  { tools: ['ausbildung','outlook'], text: 'Neue ausbildung.de-Bewerbungen automatisch per E-Mail an HR weiterleiten', hours: [2,3] },
+
+  // Slack + internal
+  { tools: ['slack','asana'],       text: 'Slack-Nachrichten mit Stichwort automatisch als Asana-Aufgabe anlegen', hours: [2,3] },
+  { tools: ['slack','trello'],      text: 'Per Slack-Befehl automatisch Trello-Karten in den richtigen Listen erstellen', hours: [2,3] },
+
+  // WhatsApp Business
+  { tools: ['whatsapp','hubspot'],  text: 'WhatsApp-Business-Anfragen automatisch als HubSpot-Kontakt und Konversation erfassen', hours: [3,5] },
+  { tools: ['whatsapp','sevdesk'],  text: 'WhatsApp-Bestellanfragen automatisch für sevDesk-Angebote vorerfassen', hours: [3,5] },
+  { tools: ['whatsapp','slack'],    text: 'WhatsApp-Business-Nachrichten automatisch in Slack-Kanäle spiegeln', hours: [2,3] },
+];
+
+// ── State ────────────────────────────────────────────────────────
+const selected = new Set();
+
+// ── Render service picker ────────────────────────────────────────
+function renderPicker() {
+  const container = document.getElementById('servicePicker');
+  container.innerHTML = '';
+
+  CATEGORIES.forEach(cat => {
+    const section = document.createElement('div');
+    section.className = 'category';
+
+    const label = document.createElement('div');
+    label.className = 'category-label';
+    label.textContent = cat.label;
+    section.appendChild(label);
+
+    const grid = document.createElement('div');
+    grid.className = 'service-grid';
+
+    cat.services.forEach(svc => {
+      const card = document.createElement('div');
+      card.className = 'service-card' + (selected.has(svc.id) ? ' selected' : '');
+      card.dataset.id = svc.id;
+      card.innerHTML = `
+        <div class="service-icon">${svc.icon}</div>
+        <div class="service-name">${svc.name}</div>
+      `;
+      card.addEventListener('click', () => toggleService(svc.id, card));
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    container.appendChild(section);
+  });
+}
+
+function toggleService(id, cardEl) {
+  if (selected.has(id)) {
+    selected.delete(id);
+    cardEl.classList.remove('selected');
+  } else {
+    selected.add(id);
+    cardEl.classList.add('selected');
+  }
+  updateResults();
+  updateSelectedCount();
+}
+
+function updateSelectedCount() {
+  const el = document.getElementById('selectedCount');
+  el.textContent = `${selected.size} ausgewählt`;
+}
+
+// ── Compute matching automations ────────────────────────────────
+function getMatchingAutomations() {
+  return AUTOMATIONS.filter(a => a.tools.every(t => selected.has(t)));
+}
+
+// ── Update results ───────────────────────────────────────────────
+function updateResults() {
+  const matches = getMatchingAutomations();
+
+  // Automations list
+  const list = document.getElementById('automationsList');
+  list.innerHTML = '';
+
+  if (matches.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.textContent = selected.size < 2
+      ? 'Wählt mindestens 2 Tools aus, um Automatisierungspotenziale zu sehen.'
+      : 'Für diese Tool-Kombination wurden noch keine Automatisierungen hinterlegt.';
+    list.appendChild(empty);
+  } else {
+    matches.forEach(m => {
+      const item = document.createElement('div');
+      item.className = 'automation-item';
+      const tagHtml = m.tools.map(t => `<span class="automation-tag">${getServiceName(t)}</span>`).join('');
+      item.innerHTML = `
+        <div class="automation-dot"></div>
+        <div>
+          <div class="automation-text">${m.text}</div>
+          <div class="automation-tags">${tagHtml}</div>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  // Time savings
+  const timeEl = document.getElementById('timeNumber');
+  const unitEl = document.getElementById('timeUnit');
+  const subEl = document.getElementById('timeSub');
+
+  if (matches.length === 0) {
+    timeEl.textContent = '—';
+    subEl.textContent = 'Wählt Tools aus, um eine Schätzung zu erhalten.';
+  } else {
+    const totalMin = matches.reduce((s, m) => s + m.hours[0], 0);
+    const totalMax = matches.reduce((s, m) => s + m.hours[1], 0);
+    const avg = Math.round((totalMin + totalMax) / 2);
+    timeEl.textContent = `~${avg}`;
+    unitEl.textContent = 'Stunden / Monat';
+    subEl.textContent = `Schätzung auf Basis von ${matches.length} Automatisierung${matches.length !== 1 ? 'en' : ''} (${totalMin}–${totalMax} h)`;
+  }
+
+  // Complexity
+  const badge = document.getElementById('complexityBadge');
+  const label = document.getElementById('complexityLabel');
+  const detail = document.getElementById('complexityDetail');
+
+  badge.className = 'complexity-badge';
+
+  if (matches.length === 0) {
+    badge.classList.add('none');
+    label.textContent = 'Noch keine Auswahl';
+    detail.textContent = 'Wählt eure Tools aus, um den Umsetzungsaufwand einzuschätzen.';
+  } else if (matches.length <= 2) {
+    badge.classList.add('easy');
+    label.textContent = 'Einfach — 1 bis 2 Tage';
+    detail.textContent = `${matches.length} Automatisierung${matches.length !== 1 ? 'en' : ''}: Standardmäßig umsetzbar, oft ohne Coding. mainly.design richtet das in wenigen Stunden ein.`;
+  } else if (matches.length <= 5) {
+    badge.classList.add('moderate');
+    label.textContent = 'Moderat — 3 bis 5 Tage';
+    detail.textContent = `${matches.length} Automatisierungen: Mehrere Workflows, gut planbar. Wir strukturieren das sauber und rollen es schrittweise aus.`;
+  } else {
+    badge.classList.add('complex');
+    label.textContent = 'Komplex — individuelle Lösung';
+    detail.textContent = `${matches.length} Automatisierungen: Umfangreiches Potenzial! Wir analysieren das gemeinsam und priorisieren die Automationen nach ROI.`;
+  }
+
+  // Update CTA email subject
+  updateCtaLink(matches);
+}
+
+function getServiceName(id) {
+  for (const cat of CATEGORIES) {
+    const svc = cat.services.find(s => s.id === id);
+    if (svc) return svc.name;
+  }
+  return id;
+}
+
+function updateCtaLink(matches) {
+  const btn = document.getElementById('ctaBtn');
+  const toolList = [...selected].map(getServiceName).join(', ');
+  const subject = `Automation Audit – ${matches.length} Automatisierungspotenziale erkannt`;
+  const body = toolList
+    ? `Hallo mainly.design Team,\n\nwir nutzen folgende Tools: ${toolList}\n\nDer Automation Checker hat ${matches.length} Automatisierungspotenziale identifiziert. Wir würden das gerne besprechen.\n\nViele Grüße`
+    : 'Hallo mainly.design Team,\n\nwir würden gerne unsere Automatisierungspotenziale besprechen.\n\nViele Grüße';
+  btn.href = `mailto:hello@mainly.design?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+// ── Init ─────────────────────────────────────────────────────────
+renderPicker();
+updateResults();
+</script>
+</body>
+</html>

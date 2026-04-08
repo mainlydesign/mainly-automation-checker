@@ -1,0 +1,13 @@
+{
+  "name": "mainly-automation-checker",
+  "version": "1.0.0",
+  "description": "Automation Potential Checker for mainly.design",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
