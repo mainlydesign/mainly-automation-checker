@@ -200,10 +200,14 @@
       font-weight: 700;
     }
 
-    .service-icon {
-      font-size: 22px;
+    .service-logo {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
       margin-bottom: 5px;
-      line-height: 1;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .service-name {
@@ -460,6 +464,20 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Category-match items */
+    .automation-item.category-match {
+      border-color: rgba(124,106,247,0.15);
+      background: rgba(124,106,247,0.03);
+    }
+    .automation-dot.category-dot {
+      background: var(--text-dim);
+    }
+    .automation-tag.category-tag {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-dim);
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -537,190 +555,117 @@ const CATEGORIES = [
   {
     label: 'Kommunikation',
     services: [
-      { id: 'outlook',   name: 'Outlook',          icon: '📧' },
-      { id: 'gmail',     name: 'Gmail',             icon: '✉️' },
-      { id: 'slack',     name: 'Slack',             icon: '💬' },
-      { id: 'teams',     name: 'Teams',             icon: '🟣' },
-      { id: 'whatsapp',  name: 'WhatsApp Business', icon: '📱' },
+      { id: 'outlook',   name: 'Outlook',          },
+      { id: 'gmail',     name: 'Gmail',             },
+      { id: 'slack',     name: 'Slack',             },
+      { id: 'teams',     name: 'Teams',             },
+      { id: 'whatsapp',  name: 'WhatsApp Business', },
+      { id: 'telegram',  name: 'Telegram',          },
+      { id: 'discord',   name: 'Discord',           },
     ]
   },
   {
     label: 'CRM / Sales',
     services: [
-      { id: 'hubspot',    name: 'HubSpot',    icon: '🟠' },
-      { id: 'salesforce', name: 'Salesforce', icon: '☁️' },
-      { id: 'pipedrive',  name: 'Pipedrive',  icon: '🔵' },
+      { id: 'hubspot',    name: 'HubSpot',    },
+      { id: 'salesforce', name: 'Salesforce', },
+      { id: 'pipedrive',  name: 'Pipedrive',  },
+      { id: 'zoho',       name: 'Zoho CRM',   },
     ]
   },
   {
     label: 'Buchhaltung / ERP',
     services: [
-      { id: 'sevdesk',   name: 'sevDesk',   icon: '🧾' },
-      { id: 'lexoffice', name: 'Lexoffice', icon: '📒' },
-      { id: 'datev',     name: 'DATEV',     icon: '🏦' },
-      { id: 'sap',       name: 'SAP',       icon: '🔷' },
+      { id: 'sevdesk',   name: 'sevDesk',   },
+      { id: 'lexoffice', name: 'Lexoffice', },
+      { id: 'datev',     name: 'DATEV',     },
+      { id: 'sap',       name: 'SAP',       },
+      { id: 'xero',      name: 'Xero',      },
+      { id: 'fastbill',  name: 'FastBill',  },
     ]
   },
   {
     label: 'HR',
     services: [
-      { id: 'personio',  name: 'Personio',  icon: '👥' },
-      { id: 'factorial', name: 'Factorial', icon: '📊' },
+      { id: 'personio',  name: 'Personio',  },
+      { id: 'factorial', name: 'Factorial', },
+      { id: 'bamboohr',  name: 'BambooHR',  },
     ]
   },
   {
     label: 'E-Commerce',
     services: [
-      { id: 'shopify',     name: 'Shopify',     icon: '🛍️' },
-      { id: 'woocommerce', name: 'WooCommerce', icon: '🛒' },
+      { id: 'shopify',       name: 'Shopify',       },
+      { id: 'woocommerce',   name: 'WooCommerce',   },
+      { id: 'billbee',       name: 'Billbee',       },
+      { id: 'magento',       name: 'Magento',       },
+      { id: 'plentymarkets', name: 'plentymarkets', },
     ]
   },
   {
     label: 'Cloud / Storage',
     services: [
-      { id: 'gdrive',     name: 'Google Drive', icon: '💚' },
-      { id: 'dropbox',    name: 'Dropbox',      icon: '🔵' },
-      { id: 'onedrive',   name: 'OneDrive',     icon: '🔷' },
-      { id: 'sharepoint', name: 'SharePoint',   icon: '🟦' },
+      { id: 'gdrive',       name: 'Google Drive',  },
+      { id: 'dropbox',      name: 'Dropbox',       },
+      { id: 'onedrive',     name: 'OneDrive',      },
+      { id: 'sharepoint',   name: 'SharePoint',    },
+      { id: 'googlesheets', name: 'Google Sheets', },
     ]
   },
   {
     label: 'Marketing',
     services: [
-      { id: 'mailchimp',      name: 'Mailchimp',        icon: '🐒' },
-      { id: 'activecampaign', name: 'ActiveCampaign',   icon: '⚡' },
-      { id: 'brevo',          name: 'Brevo',             icon: '🟢' },
+      { id: 'mailchimp',      name: 'Mailchimp',      },
+      { id: 'activecampaign', name: 'ActiveCampaign', },
+      { id: 'brevo',          name: 'Brevo',          },
+      { id: 'klaviyo',        name: 'Klaviyo',        },
     ]
   },
   {
     label: 'Projektmanagement',
     services: [
-      { id: 'asana',   name: 'Asana',   icon: '🔴' },
-      { id: 'monday',  name: 'Monday',  icon: '🟡' },
-      { id: 'notion',  name: 'Notion',  icon: '⬛' },
-      { id: 'trello',  name: 'Trello',  icon: '🔵' },
+      { id: 'asana',   name: 'Asana',   },
+      { id: 'monday',  name: 'Monday',  },
+      { id: 'notion',  name: 'Notion',  },
+      { id: 'trello',  name: 'Trello',  },
+      { id: 'jira',    name: 'Jira',    },
+      { id: 'clickup', name: 'ClickUp', },
+    ]
+  },
+  {
+    label: 'Support',
+    services: [
+      { id: 'zendesk',   name: 'Zendesk',   },
+      { id: 'freshdesk', name: 'Freshdesk', },
+      { id: 'intercom',  name: 'Intercom',  },
     ]
   },
   {
     label: 'Sonstiges',
     services: [
-      { id: 'calendly',  name: 'Calendly',     icon: '📅' },
-      { id: 'typeform',  name: 'Typeform',      icon: '📝' },
-      { id: 'stripe',    name: 'Stripe',        icon: '💳' },
-      { id: 'zapier',    name: 'Zapier/Make',   icon: '⚙️' },
-      { id: 'ausbildung', name: 'ausbildung.de', icon: '🎓' },
+      { id: 'calendly',    name: 'Calendly',      },
+      { id: 'typeform',    name: 'Typeform',      },
+      { id: 'stripe',      name: 'Stripe',        },
+      { id: 'zapier',      name: 'Zapier/Make',   },
+      { id: 'airtable',    name: 'Airtable',      },
+      { id: 'googleforms', name: 'Google Forms',  },
+      { id: 'docusign',    name: 'DocuSign',      },
+      { id: 'webflow',     name: 'Webflow',       },
+      { id: 'ausbildung',  name: 'ausbildung.de', },
     ]
   },
 ];
 
-// ── Automation lookup table ──────────────────────────────────────
-// Each entry: { tools: [id, id, ...], text, hours: [min, max] }
-// If ANY two of the tools in the array are selected, the automation fires.
-// For entries with exactly 2 tools, both must be selected.
-const AUTOMATIONS = [
-  // Outlook/Gmail + Buchhaltung
-  { tools: ['outlook','sevdesk'],   text: 'Eingangsrechnungen per E-Mail automatisch in sevDesk erfassen und kategorisieren', hours: [4,6] },
-  { tools: ['gmail','sevdesk'],     text: 'Gmail-Anhänge mit Rechnungen automatisch in sevDesk importieren', hours: [3,5] },
-  { tools: ['outlook','lexoffice'], text: 'Eingangsrechnungen aus Outlook automatisch in Lexoffice anlegen', hours: [4,6] },
-  { tools: ['gmail','lexoffice'],   text: 'Rechnungs-E-Mails aus Gmail automatisch in Lexoffice verbuchen', hours: [3,5] },
-  { tools: ['outlook','datev'],     text: 'Belege aus Outlook-E-Mails automatisch für DATEV aufbereiten und exportieren', hours: [5,7] },
-  { tools: ['gmail','datev'],       text: 'Gmail-Anhänge automatisch als DATEV-Belegstapel vorbereiten', hours: [4,6] },
+// ── Automation data (loaded from automations.json) ──────────────
+let AUTOMATIONS = [];
 
-  // CRM + E-Mail
-  { tools: ['hubspot','outlook'],   text: 'Neue HubSpot-Leads automatisch per personalisierter Outlook-E-Mail begrüßen', hours: [3,5] },
-  { tools: ['hubspot','gmail'],     text: 'HubSpot-Deals bei Statuswechsel automatisch per Gmail benachrichtigen', hours: [3,5] },
-  { tools: ['salesforce','outlook'],text: 'Salesforce-Opportunities automatisch mit Outlook-Kalender synchronisieren', hours: [4,6] },
-  { tools: ['salesforce','gmail'],  text: 'Neue Salesforce-Kontakte automatisch mit Gmail-Verlauf anreichern', hours: [4,6] },
-  { tools: ['pipedrive','outlook'], text: 'Pipedrive-Deals bei Abschluss automatisch per E-Mail-Vorlage bestätigen', hours: [3,5] },
-  { tools: ['pipedrive','gmail'],   text: 'Gmail-Konversationen automatisch als Pipedrive-Aktivitäten protokollieren', hours: [3,4] },
-
-  // CRM + Buchhaltung
-  { tools: ['hubspot','sevdesk'],   text: 'Gewonnene HubSpot-Deals automatisch als sevDesk-Angebote oder Rechnungen anlegen', hours: [5,7] },
-  { tools: ['hubspot','lexoffice'], text: 'HubSpot-Kunden bei Deal-Abschluss automatisch in Lexoffice übertragen', hours: [4,6] },
-  { tools: ['pipedrive','sevdesk'], text: 'Pipedrive-Deals automatisch in sevDesk-Aufträge umwandeln', hours: [4,6] },
-  { tools: ['salesforce','sap'],    text: 'Salesforce-Aufträge automatisch in SAP-Bestellungen überführen', hours: [6,8] },
-
-  // Calendly
-  { tools: ['calendly','outlook'],  text: 'Calendly-Termine automatisch in Outlook-Kalender eintragen und Erinnerungen versenden', hours: [2,4] },
-  { tools: ['calendly','gmail'],    text: 'Calendly-Buchungen automatisch per Gmail bestätigen und Erinnerungen schedulen', hours: [2,3] },
-  { tools: ['calendly','hubspot'],  text: 'Calendly-Buchungen automatisch als HubSpot-Meeting und Lead anlegen', hours: [3,5] },
-  { tools: ['calendly','pipedrive'],text: 'Calendly-Termine automatisch als Pipedrive-Aktivität eintragen', hours: [3,4] },
-  { tools: ['calendly','teams'],    text: 'Calendly-Buchungen automatisch als Teams-Meeting mit Link anlegen', hours: [2,3] },
-  { tools: ['calendly','slack'],    text: 'Team per Slack automatisch über neue Calendly-Buchungen informieren', hours: [2,3] },
-
-  // E-Commerce + Buchhaltung
-  { tools: ['shopify','sevdesk'],   text: 'Shopify-Bestellungen automatisch als Rechnung in sevDesk anlegen und versenden', hours: [5,7] },
-  { tools: ['shopify','lexoffice'], text: 'Shopify-Bestellungen automatisch in Lexoffice als Ausgangsrechnung erfassen', hours: [4,6] },
-  { tools: ['woocommerce','sevdesk'],text: 'WooCommerce-Bestellungen automatisch als sevDesk-Rechnungen erzeugen', hours: [4,6] },
-  { tools: ['woocommerce','lexoffice'],text: 'WooCommerce-Umsätze automatisch in Lexoffice synchronisieren', hours: [4,5] },
-  { tools: ['shopify','datev'],     text: 'Shopify-Umsätze täglich automatisch als DATEV-Export aufbereiten', hours: [5,6] },
-  { tools: ['shopify','stripe'],    text: 'Stripe-Zahlungen automatisch mit Shopify-Bestellungen abgleichen', hours: [3,5] },
-
-  // E-Commerce + CRM
-  { tools: ['shopify','hubspot'],   text: 'Shopify-Kunden bei Erstkauf automatisch als HubSpot-Kontakt anlegen', hours: [3,5] },
-  { tools: ['woocommerce','hubspot'],text: 'WooCommerce-Käufer automatisch in HubSpot-Segmente einordnen', hours: [3,4] },
-  { tools: ['shopify','mailchimp'], text: 'Shopify-Kundensegmente automatisch in Mailchimp-Listen übertragen', hours: [3,4] },
-  { tools: ['shopify','brevo'],     text: 'Shopify-Bestellstatus automatisch als Brevo-Transaktions-E-Mail versenden', hours: [3,5] },
-
-  // HR + Kommunikation
-  { tools: ['personio','outlook'],  text: 'Onboarding-E-Mails und Einarbeitungspläne bei Neueinstellungen automatisch versenden', hours: [4,6] },
-  { tools: ['personio','slack'],    text: 'Team per Slack automatisch über neue Mitarbeiter und Abwesenheiten informieren', hours: [3,4] },
-  { tools: ['personio','teams'],    text: 'Personio-Abwesenheiten automatisch im Teams-Kalender blockieren', hours: [3,4] },
-  { tools: ['factorial','outlook'], text: 'Urlaubsanträge aus Factorial automatisch per Outlook-E-Mail genehmigen lassen', hours: [3,5] },
-  { tools: ['factorial','slack'],   text: 'Schichtpläne aus Factorial automatisch täglich per Slack kommunizieren', hours: [2,4] },
-
-  // Projektmanagement + Kommunikation
-  { tools: ['asana','slack'],       text: 'Asana-Aufgaben bei Fälligkeit automatisch als Slack-Reminder versenden', hours: [2,3] },
-  { tools: ['monday','slack'],      text: 'Monday-Status-Updates automatisch in relevante Slack-Kanäle posten', hours: [2,3] },
-  { tools: ['trello','slack'],      text: 'Trello-Karten-Bewegungen automatisch in Slack-Channels melden', hours: [2,3] },
-  { tools: ['notion','slack'],      text: 'Neue Notion-Einträge automatisch per Slack im Team ankündigen', hours: [2,3] },
-  { tools: ['asana','teams'],       text: 'Asana-Projektfortschritt wöchentlich automatisch als Teams-Bericht teilen', hours: [2,4] },
-
-  // Projektmanagement + CRM
-  { tools: ['asana','hubspot'],     text: 'Neue HubSpot-Deals automatisch als Asana-Projekt anlegen', hours: [3,5] },
-  { tools: ['monday','hubspot'],    text: 'HubSpot-Deals bei Statuswechsel automatisch in Monday-Board übernehmen', hours: [3,5] },
-
-  // Cloud Storage + Kommunikation
-  { tools: ['gdrive','slack'],      text: 'Neue Google-Drive-Dokumente automatisch per Slack im Team ankündigen', hours: [2,3] },
-  { tools: ['sharepoint','teams'],  text: 'SharePoint-Dokumentänderungen automatisch als Teams-Benachrichtigung senden', hours: [2,3] },
-  { tools: ['onedrive','teams'],    text: 'OneDrive-Freigaben automatisch als Teams-Nachricht kommunizieren', hours: [2,3] },
-  { tools: ['dropbox','slack'],     text: 'Neue Dropbox-Uploads automatisch per Slack melden', hours: [2,3] },
-
-  // Marketing + CRM
-  { tools: ['mailchimp','hubspot'], text: 'Mailchimp-Öffnungs- und Klickdaten automatisch in HubSpot-Kontakte zurückschreiben', hours: [3,5] },
-  { tools: ['activecampaign','hubspot'], text: 'ActiveCampaign-Leads automatisch als HubSpot-Kontakte mit Score übertragen', hours: [4,6] },
-  { tools: ['brevo','hubspot'],     text: 'Brevo-Newsletter-Abonnenten automatisch in HubSpot synchronisieren', hours: [3,4] },
-  { tools: ['mailchimp','pipedrive'],text: 'Mailchimp-Klicks auf Angebots-Links automatisch als Pipedrive-Aktivität erfassen', hours: [3,4] },
-
-  // Typeform + CRM/HR
-  { tools: ['typeform','hubspot'],  text: 'Typeform-Kontaktformulare automatisch als HubSpot-Leads anlegen', hours: [2,4] },
-  { tools: ['typeform','outlook'],  text: 'Typeform-Einreichungen automatisch per E-Mail weiterleiten und zuweisen', hours: [2,3] },
-  { tools: ['typeform','personio'], text: 'Bewerber-Typeforms automatisch als Personio-Kandidaten anlegen', hours: [3,5] },
-  { tools: ['typeform','slack'],    text: 'Neue Typeform-Einreichungen sofort per Slack an das zuständige Team melden', hours: [2,3] },
-  { tools: ['typeform','trello'],   text: 'Typeform-Anfragen automatisch als Trello-Karten im Backlog anlegen', hours: [2,3] },
-
-  // Stripe + Buchhaltung
-  { tools: ['stripe','sevdesk'],    text: 'Stripe-Zahlungseingänge automatisch in sevDesk als Zahlung verbuchen', hours: [4,5] },
-  { tools: ['stripe','lexoffice'],  text: 'Stripe-Transaktionen täglich automatisch in Lexoffice importieren', hours: [3,5] },
-  { tools: ['stripe','datev'],      text: 'Stripe-Umsätze automatisch DATEV-konform aufbereiten und exportieren', hours: [4,6] },
-
-  // Zapier/Make as orchestrator
-  { tools: ['zapier','hubspot'],    text: 'Zapier/Make als Middleware nutzen: HubSpot-Daten automatisch in andere Tools routen', hours: [3,5] },
-  { tools: ['zapier','sevdesk'],    text: 'Make-Szenarien für sevDesk: Eingangs- und Ausgangsrechnungen vollautomatisch verarbeiten', hours: [4,6] },
-
-  // Ausbildung.de
-  { tools: ['ausbildung','personio'],text: 'ausbildung.de-Bewerbungen automatisch in Personio-Kandidatenpipeline importieren', hours: [3,5] },
-  { tools: ['ausbildung','outlook'], text: 'Neue ausbildung.de-Bewerbungen automatisch per E-Mail an HR weiterleiten', hours: [2,3] },
-
-  // Slack + internal
-  { tools: ['slack','asana'],       text: 'Slack-Nachrichten mit Stichwort automatisch als Asana-Aufgabe anlegen', hours: [2,3] },
-  { tools: ['slack','trello'],      text: 'Per Slack-Befehl automatisch Trello-Karten in den richtigen Listen erstellen', hours: [2,3] },
-
-  // WhatsApp Business
-  { tools: ['whatsapp','hubspot'],  text: 'WhatsApp-Business-Anfragen automatisch als HubSpot-Kontakt und Konversation erfassen', hours: [3,5] },
-  { tools: ['whatsapp','sevdesk'],  text: 'WhatsApp-Bestellanfragen automatisch für sevDesk-Angebote vorerfassen', hours: [3,5] },
-  { tools: ['whatsapp','slack'],    text: 'WhatsApp-Business-Nachrichten automatisch in Slack-Kanäle spiegeln', hours: [2,3] },
-];
+// ── Category helper ──────────────────────────────────────────────
+function getCategoryForTool(toolId) {
+  for (const cat of CATEGORIES) {
+    if (cat.services.some(s => s.id === toolId)) return cat.label;
+  }
+  return null;
+}
 
 // ── State ────────────────────────────────────────────────────────
 const selected = new Set();
@@ -747,7 +692,7 @@ function renderPicker() {
       card.className = 'service-card' + (selected.has(svc.id) ? ' selected' : '');
       card.dataset.id = svc.id;
       card.innerHTML = `
-        <div class="service-icon">${svc.icon}</div>
+        <img class="service-logo" src="/logos/${svc.id}.svg" alt="${svc.name}" loading="lazy" draggable="false">
         <div class="service-name">${svc.name}</div>
       `;
       card.addEventListener('click', () => toggleService(svc.id, card));
@@ -778,7 +723,35 @@ function updateSelectedCount() {
 
 // ── Compute matching automations ────────────────────────────────
 function getMatchingAutomations() {
-  return AUTOMATIONS.filter(a => a.tools.every(t => selected.has(t)));
+  const selectedArr = [...selected];
+
+  // Exact matches: all tools must be selected (works for 2- and 3-tool entries)
+  const exactMatches = AUTOMATIONS.filter(a => a.tools && a.tools.every(t => selected.has(t)));
+
+  // Build set of category pairs already covered by exact matches
+  const coveredPairs = new Set();
+  exactMatches.forEach(m => {
+    const cats = m.tools.map(getCategoryForTool).filter(Boolean);
+    for (let i = 0; i < cats.length; i++) {
+      for (let j = i + 1; j < cats.length; j++) {
+        coveredPairs.add([cats[i], cats[j]].sort().join('|||'));
+      }
+    }
+  });
+
+  // Category fallback matches: each listed category must have ≥1 selected tool,
+  // and the combination must not already be covered by an exact match
+  const selectedCategories = [...new Set(selectedArr.map(getCategoryForTool).filter(Boolean))];
+  const categoryMatches = AUTOMATIONS
+    .filter(a => {
+      if (!a.categories) return false;
+      const key = [...a.categories].sort().join('|||');
+      return !coveredPairs.has(key) &&
+        a.categories.every(cat => selectedCategories.includes(cat));
+    })
+    .map(a => ({ ...a, isCategoryMatch: true }));
+
+  return [...exactMatches, ...categoryMatches];
 }
 
 // ── Update results ───────────────────────────────────────────────
@@ -799,10 +772,15 @@ function updateResults() {
   } else {
     matches.forEach(m => {
       const item = document.createElement('div');
-      item.className = 'automation-item';
-      const tagHtml = m.tools.map(t => `<span class="automation-tag">${getServiceName(t)}</span>`).join('');
+      item.className = 'automation-item' + (m.isCategoryMatch ? ' category-match' : '');
+      let tagHtml;
+      if (m.isCategoryMatch) {
+        tagHtml = m.categories.map(c => `<span class="automation-tag category-tag">${c}</span>`).join('');
+      } else {
+        tagHtml = m.tools.map(t => `<span class="automation-tag">${getServiceName(t)}</span>`).join('');
+      }
       item.innerHTML = `
-        <div class="automation-dot"></div>
+        <div class="automation-dot${m.isCategoryMatch ? ' category-dot' : ''}"></div>
         <div>
           <div class="automation-text">${m.text}</div>
           <div class="automation-tags">${tagHtml}</div>
@@ -877,8 +855,18 @@ function updateCtaLink(matches) {
 }
 
 // ── Init ─────────────────────────────────────────────────────────
-renderPicker();
-updateResults();
+async function init() {
+  try {
+    const res = await fetch('/automations.json');
+    AUTOMATIONS = await res.json();
+  } catch (e) {
+    console.error('Automations could not be loaded:', e);
+  }
+  renderPicker();
+  updateResults();
+}
+
+init();
 </script>
 </body>
 </html>
