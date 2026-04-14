@@ -549,7 +549,9 @@
   <p>Ein Tool von <a href="https://mainly.design" target="_blank">mainly.design</a> · Automatisierung für deutsche KMU</p>
 </footer>
 
-<script>
+<script type="module">
+import { createServiceCard } from '/components/ServiceCard.js';
+
 // ── Service definitions ──────────────────────────────────────────
 const CATEGORIES = [
   {
@@ -688,14 +690,7 @@ function renderPicker() {
     grid.className = 'service-grid';
 
     cat.services.forEach(svc => {
-      const card = document.createElement('div');
-      card.className = 'service-card' + (selected.has(svc.id) ? ' selected' : '');
-      card.dataset.id = svc.id;
-      card.innerHTML = `
-        <img class="service-logo" src="/logos/${svc.id}.svg" alt="${svc.name}" loading="lazy" draggable="false">
-        <div class="service-name">${svc.name}</div>
-      `;
-      card.addEventListener('click', () => toggleService(svc.id, card));
+      const card = createServiceCard(svc, selected.has(svc.id), toggleService);
       grid.appendChild(card);
     });
 
