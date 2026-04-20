@@ -88,6 +88,13 @@ export const CATEGORIES = [
     ]
   },
   {
+    label: 'KI / AI',
+    services: [
+      { id: 'chatgpt', name: 'ChatGPT', },
+      { id: 'claude',  name: 'Claude',  },
+    ]
+  },
+  {
     label: 'Sonstiges',
     services: [
       { id: 'calendly',    name: 'Calendly',      },
