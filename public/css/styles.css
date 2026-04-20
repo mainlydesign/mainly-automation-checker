@@ -74,7 +74,7 @@ header {
   font-weight: 400;
   letter-spacing: -0.01em;
   text-transform: uppercase;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'FT Polar Mono Trial', monospace;
   color: var(--accent-light);
   margin-bottom: 16px;
 }
