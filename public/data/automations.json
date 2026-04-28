@@ -248,7 +248,7 @@
   { "tools": ["claude","whatsapp"],        "text": "WhatsApp-Business-Anfragen automatisch per Claude qualifizieren und professionell beantworten", "hours": [5,7] },
   { "tools": ["claude","gdrive"],          "text": "Google-Drive-Dokumente automatisch per Claude analysieren, zusammenfassen und Kernaussagen extrahieren", "hours": [3,5] },
 
-  { "tools": ["chatgpt","claude"],         "text": "KI-gestützte Inhalte automatisch von ChatGPT erstellen und von Claude überprüfen, verfeinern und qualitätssichern lassen", "hours": [3,5] }]
+  { "tools": ["chatgpt","claude"],         "text": "KI-gestützte Inhalte automatisch von ChatGPT erstellen und von Claude überprüfen, verfeinern und qualitätssichern lassen", "hours": [3,5] },
 
   { "tools": ["shopify","stripe","sevdesk"],      "text": "Shopify-Bestellungen mit Stripe-Zahlung automatisch als sevDesk-Rechnung inkl. Zahlungsstatus anlegen", "hours": [6,9] },
   { "tools": ["shopify","stripe","lexoffice"],    "text": "Shopify-Stripe-Zahlungen automatisch als Lexoffice-Ausgangsrechnung mit Zahlungsabgleich anlegen", "hours": [5,8] },
